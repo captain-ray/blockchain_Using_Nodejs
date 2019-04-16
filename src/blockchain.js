@@ -34,7 +34,7 @@ class Blockchain {
 
     mine() {
         const newBlock = this.generateNewBlock()
-        if (this.isValidBlock(newBlock)) {
+        if (this.isValidBlock(newBlock) && this.isValidChain()) {
             console.log("Success:valid block!")
             this.blockchain.push(newBlock)
         } else {
@@ -74,9 +74,8 @@ class Blockchain {
             .digest('hex')
     }
 
-
-    isValidBlock(newBlock) {
-        const lastBlock = this.getLastBlock()
+    //check newly generated block is valid
+    isValidBlock(newBlock, lastBlock = this.getLastBlock()) {
         /*
         Check
           1. index = index of last block + 1 
@@ -84,7 +83,7 @@ class Blockchain {
           3. prevHash =  hash of last block
           4. comply with difficulty requirement (the first 4 digits should be '0')
          */
-        
+
         if (newBlock.index !== lastBlock.index + 1) {
             return false
         } else if (newBlock.timestamp <= lastBlock.timestamp) {
@@ -98,9 +97,29 @@ class Blockchain {
         return true
     }
 
+    //check if the newly updated blockchain is valid, avoid being tampered
+    isValidChain(chain = this.blockchain) {
+        //compare every single block with previous block using isValidBlock() function
+        for (let i = chain.length - 1; i >= 1; i--) {
+            if(!this.isValidBlock(chain[i],chain[i-1])){
+                console.log('Invalid chain!')
+                return false
+            }
+        }
+
+        //simply compare the first block with genesis block
+        if(JSON.stringify(chain[0])!==JSON.stringify(genesisBlock)){
+            return false
+        }
+        
+        return true
+    }
+
 }
 
 let bc = new Blockchain()
+bc.mine()
+bc.blockchain[1].hash = '2000000'
 bc.mine()
 console.log(bc.blockchain)
 

@@ -132,7 +132,7 @@ const genesisBlock = {
 
 ## 1.5 check if block is valid
 
-after generate a new block, to check this newly generated block is valid or not
+After generating a new block, to check this newly generated block is valid or not
 
 requirements to meet:
 
@@ -145,8 +145,8 @@ requirements to meet:
 4. comply with difficulty requirement (the first 4 digits should be '0')
 
 ```js
-isValidBlock(newBlock) {
-        const lastBlock = this.getLastBlock()
+ //check newly generated block is valid
+    isValidBlock(newBlock, lastBlock = this.getLastBlock()) {
         /*
         Check
           1. index = index of last block + 1 
@@ -154,7 +154,7 @@ isValidBlock(newBlock) {
           3. prevHash =  hash of last block
           4. comply with difficulty requirement (the first 4 digits should be '0')
          */
-        
+
         if (newBlock.index !== lastBlock.index + 1) {
             return false
         } else if (newBlock.timestamp <= lastBlock.timestamp) {
@@ -171,5 +171,47 @@ isValidBlock(newBlock) {
 
 ![5](demo_images/5.png)
 
-once confirm that the new block is valid, it will be added to the chain
+Once confirm that the new block is valid, it will be added to the chain
+
+
+
+## 1.6 check if the chain is valid
+
+Check if the newly updated blockchain is valid, avoid being tampered
+
+```js
+//check if the newly updated blockchain is valid, avoid being tampered
+    isValidChain(chain = this.blockchain) {
+        //compare every single block with previous block using isValidBlock() function
+        for (let i = chain.length - 1; i >= 1; i--) {
+            if(!this.isValidBlock(chain[i],chain[i-1])){
+                console.log('Invalid chain!')
+                return false
+            }
+        }
+
+        //simply compare the first block with genesis block
+        if(JSON.stringify(chain[0])!==JSON.stringify(genesisBlock)){
+            return false
+        }
+        
+        return true
+    }
+```
+
+
+
+Try to tamper the hash of block[1]
+
+```js
+let bc = new Blockchain()
+bc.mine()
+bc.blockchain[1].hash = '2000000' // try to tamper the hash of block[1]
+bc.mine()
+console.log(bc.blockchain)
+```
+
+Before adding block[2] to the chain, it will check if the whole chain is valid or not. because block[1] has been tampered, the newly generated block[2] will not be added to the chain.
+
+![6](demo_images/6.png)
 
