@@ -4,21 +4,7 @@
 
 ## 1.1 block structure
 
-A block is composed of {
-
-'index',
-
- 'data'(transaction),
-
- 'previousHash',
-
- 'timestamp', 
-
- 'nonce'(a random seed used for mining),
-
- 'currentHash',
-
-}
+A block is composed of 'index', 'data'(transaction), 'previousHash', 'timestamp',  'nonce'(a random seed used for mining), 'currentHash'
 
 ```
 block structure={
