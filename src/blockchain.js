@@ -66,6 +66,8 @@ class Blockchain {
         }
     }
 
+    
+
     //using 'sha256' (Secure Hash Algorithm 256-bit) to generate hash
     computeHash(index, prevHash, timestamp, data, nonce) {
         return crypto
@@ -74,14 +76,24 @@ class Blockchain {
             .digest('hex')
     }
 
+    //using 'sha256' (Secure Hash Algorithm 256-bit) to generate hash
+    computeBlockHash({index, prevHash, timestamp, data, nonce}) {
+        return crypto
+            .createHash('sha256')
+            .update(index + prevHash + timestamp + data + nonce)
+            .digest('hex')
+    }
+
+
     //check newly generated block is valid
     isValidBlock(newBlock, lastBlock = this.getLastBlock()) {
         /*
         Check
-          1. index = index of last block + 1 
+          1. index == index of last block + 1 
           2. timestamp > timestamp of last block
-          3. prevHash =  hash of last block
+          3. prevHash ==  hash of last block
           4. comply with difficulty requirement (the first 4 digits should be '0')
+          5. hash == recompute the hash of the block
          */
 
         if (newBlock.index !== lastBlock.index + 1) {
@@ -91,6 +103,8 @@ class Blockchain {
         } else if (newBlock.prevHash !== lastBlock.hash) {
             return false
         } else if (newBlock.hash.slice(0, this.difficulty) !== '0'.repeat(this.difficulty)) {
+            return false
+        }else if(newBlock.hash!==this.computeBlockHash(newBlock)){ //everytime you check the block, should recompute the hash and compare it with the original hash
             return false
         }
 
@@ -119,7 +133,7 @@ class Blockchain {
 
 let bc = new Blockchain()
 bc.mine()
-bc.blockchain[1].hash = '2000000'
+bc.blockchain[1].nonce = 20
 bc.mine()
 console.log(bc.blockchain)
 

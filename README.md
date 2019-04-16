@@ -136,23 +136,26 @@ After generating a new block, to check this newly generated block is valid or no
 
 requirements to meet:
 
-1. index = index of last block + 1 
+1. index == index of last block + 1 
 
 2. timestamp > timestamp of last block
 
-3. prevHash =  hash of last block
+3. prevHash ==  hash of last block
 
 4. comply with difficulty requirement (the first 4 digits should be '0')
+5. hash == recompute the hash of the block
 
 ```js
- //check newly generated block is valid
+
+    //check newly generated block is valid
     isValidBlock(newBlock, lastBlock = this.getLastBlock()) {
         /*
         Check
-          1. index = index of last block + 1 
+          1. index == index of last block + 1 
           2. timestamp > timestamp of last block
-          3. prevHash =  hash of last block
+          3. prevHash ==  hash of last block
           4. comply with difficulty requirement (the first 4 digits should be '0')
+          5. hash == recompute the hash of the block
          */
 
         if (newBlock.index !== lastBlock.index + 1) {
@@ -162,6 +165,8 @@ requirements to meet:
         } else if (newBlock.prevHash !== lastBlock.hash) {
             return false
         } else if (newBlock.hash.slice(0, this.difficulty) !== '0'.repeat(this.difficulty)) {
+            return false
+        }else if(newBlock.hash!==this.computeBlockHash(newBlock)){ //everytime you check the block, should recompute the hash and compare it with the original hash
             return false
         }
 
