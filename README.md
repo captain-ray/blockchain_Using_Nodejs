@@ -1,8 +1,8 @@
-# Create Blockchain using Nodejs
+# 1 Create Blockchain using Nodejs
 
 
 
-## mine function
+## 1.1 mine function
 
 to make hash smaller
 
@@ -39,7 +39,7 @@ When increase to 4, the number increase to 96830
 
  
 
-## genesis block
+## 1.2 genesis block
 
 Using mine() function to generate a genesis block (difficulty = 4 in this context, we want the first 4 digits of the hash should be '0')
 
