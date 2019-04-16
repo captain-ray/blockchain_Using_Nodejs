@@ -37,6 +37,7 @@ class Blockchain {
         if (this.isValidBlock(newBlock) && this.isValidChain()) {
             console.log("Success:valid block!")
             this.blockchain.push(newBlock)
+            return newBlock
         } else {
             console.log("Error:invalid block!")
         }
@@ -131,10 +132,12 @@ class Blockchain {
 
 }
 
-let bc = new Blockchain()
-bc.mine()
-bc.blockchain[1].nonce = 20
-bc.mine()
-console.log(bc.blockchain)
+// let bc = new Blockchain()
+// bc.mine()
+// bc.blockchain[1].nonce = 20
+// bc.mine()
+// console.log(bc.blockchain)
+
+module.exports=Blockchain
 
 

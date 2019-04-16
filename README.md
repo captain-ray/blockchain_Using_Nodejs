@@ -220,3 +220,55 @@ Before adding block[2] to the chain, it will check if the whole chain is valid o
 
 ![6](demo_images/6.png)
 
+
+
+
+
+## 1.7 build interactive CLI for blockchain using 'Vorpal'
+
+> Vorpal is Node's first framework for building interactive CLI applications. With a simple and powerful API, Vorpal opens the door to a new breed of rich, immersive CLI environments. 
+>
+> [Vorpal in NPM]: https://www.npmjs.com/package/vorpal#introduction
+
+Currently, the CLI only has 'print whole chain' & 'Mine' function.
+
+```js
+const vorpal = require('vorpal')()
+const Blockchain = require('./Blockchain') 
+const blockchain = new Blockchain()
+
+//when users type in 'chain', they will get the whole chain
+vorpal
+    .command('chain', 'display the whole chain')
+    .action(function (args, callback) {
+        this.log(blockchain.blockchain)
+        callback()
+    })
+
+//when users type in 'mine', it will do mining and show the newly generated block
+vorpal
+    .command('mine', 'mining')
+    .action(function (args, callback) {
+        const newBlock=blockchain.mine()
+        if(newBlock){
+            console.log(newBlock)
+        }
+        callback()
+    })
+
+//welcome message & show help instructions
+console.log('Welcome to ray-chain!')
+vorpal.exec('help')
+
+//customize delimeter
+vorpal
+    .delimiter('ray-chain$')
+    .show()
+```
+
+![7](demo_images/7.png)
+
+![8](demo_images/8.png)
+
+![Screen Shot 2019-04-17 at 7.53.11 am](../../../Desktop/Screen Shot 2019-04-17 at 7.53.11 am.png)
+
