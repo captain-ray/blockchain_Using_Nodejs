@@ -37,6 +37,7 @@ class Blockchain {
         const prevHash = '0'
         let timestamp = 1555410312135
         let hash = this.computeHash(index, prevHash, timestamp, data, nonce)
+        // difficulty = 4 in this context, we want the first 4 digits of the hash should be '0'
         while (hash.slice(0, this.difficulty) != '0'.repeat(this.difficulty)) {
             nonce += 1
             hash = this.computeHash(index, prevHash, timestamp, data, nonce)
@@ -54,7 +55,8 @@ class Blockchain {
     generateNewBlock() {
 
     }
-
+    
+    //using 'sha256' (Secure Hash Algorithm 256-bit) to generate hash
     computeHash(index, prevHash, timestamp, data, nonce) {
         return crypto
             .createHash('sha256')

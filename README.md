@@ -2,7 +2,62 @@
 
 
 
-## 1.1 mine function
+## 1.1 block structure
+
+A block is composed of {
+
+'index',
+
+ 'data'(transaction),
+
+ 'previousHash',
+
+ 'timestamp', 
+
+ 'nonce'(a random seed used for mining),
+
+ 'currentHash',
+
+}
+
+```
+block structure={
+ 'index',
+
+ 'data'(transaction),
+
+ 'previousHash',
+
+ 'timestamp', 
+
+ 'nonce'(a random seed used for mining),
+
+ 'currentHash',
+}
+```
+
+So, a valid block will be like this:
+
+![4](demo_images/4.png)
+
+
+
+## 1.2 compute hash
+
+using 'sha256' (Secure Hash Algorithm 256-bit) to generate hash.
+
+```js
+computeHash(index, prevHash, timestamp, data, nonce) {
+        return crypto
+            .createHash('sha256')
+            .update(index + prevHash + timestamp + data + nonce)
+            .digest('hex')
+    }
+```
+
+
+
+## 1.3 mine function
 
 to make hash smaller
 
@@ -39,7 +94,7 @@ When increase to 4, the number increase to 96830
 
  
 
-## 1.2 genesis block
+## 1.4 genesis block
 
 Using mine() function to generate a genesis block (difficulty = 4 in this context, we want the first 4 digits of the hash should be '0')
 
@@ -70,4 +125,22 @@ Using mine() function to generate a genesis block (difficulty = 4 in this contex
 the detail of genesis block shows below:
 
 ![4](demo_images/4.png)
+
+
+
+so, we initialize the genesis block
+
+```js
+// use mine() function to generate a genesis block
+const genesisBlock = {
+    index: 0,
+    data: 'Hello ray-chain',
+    prevHash: '0',
+    timestamp: 1555410312135,
+    nonce: 96830,
+    hash: '0000f16aea4d1bcf2428ef5b988b7ffd2697c1d1f89ade5b93892d16a867c0a7'
+}
+```
+
+
 
