@@ -21,41 +21,51 @@ const genesisBlock = {
 
 class Blockchain {
     constructor() {
-        this.blockchain = []
+        this.blockchain = [genesisBlock]
         this.data = []
-        this.difficulty = 4
-        //     const hash = this.computeHash(0, '0', 1555410312135, 'Hello ray-chain', 1)
-        //     console.log(hash)
-        // }
+        this.difficulty = 4 //we want the first 4 digits of the hash should be '0'
 
     }
 
+    getLastBlock() {
+        return this.blockchain[this.blockchain.length - 1]
+    }
+
+
     mine() {
+        const newBlock = this.generateNewBlock()
+        if (this.isValidBlock(newBlock)) {
+            console.log("Success:valid block!")
+            this.blockchain.push(newBlock)
+        } else {
+            console.log("Error:invalid block!")
+        }
+    }
+
+    // keep computing hash until the first 4 digits of hash are all '0'
+    generateNewBlock() {
         let nonce = 0
-        const index = 0
-        const data = "Hello ray-chain"
-        const prevHash = '0'
-        let timestamp = 1555410312135
+        const index = this.blockchain.length
+        const data = this.data
+        const prevHash = this.getLastBlock().hash
+        let timestamp = new Date().getTime()
         let hash = this.computeHash(index, prevHash, timestamp, data, nonce)
         // difficulty = 4 in this context, we want the first 4 digits of the hash should be '0'
         while (hash.slice(0, this.difficulty) != '0'.repeat(this.difficulty)) {
             nonce += 1
             hash = this.computeHash(index, prevHash, timestamp, data, nonce)
         }
-        console.log('mine over', {
+
+        return {
             index,
             data,
             prevHash,
             timestamp,
             nonce,
             hash
-        })
+        }
     }
 
-    generateNewBlock() {
-
-    }
-    
     //using 'sha256' (Secure Hash Algorithm 256-bit) to generate hash
     computeHash(index, prevHash, timestamp, data, nonce) {
         return crypto
@@ -64,8 +74,34 @@ class Blockchain {
             .digest('hex')
     }
 
+
+    isValidBlock(newBlock) {
+        const lastBlock = this.getLastBlock()
+        /*
+        Check
+          1. index = index of last block + 1 
+          2. timestamp > timestamp of last block
+          3. prevHash =  hash of last block
+          4. comply with difficulty requirement (the first 4 digits should be '0')
+         */
+        
+        if (newBlock.index !== lastBlock.index + 1) {
+            return false
+        } else if (newBlock.timestamp <= lastBlock.timestamp) {
+            return false
+        } else if (newBlock.prevHash !== lastBlock.hash) {
+            return false
+        } else if (newBlock.hash.slice(0, this.difficulty) !== '0'.repeat(this.difficulty)) {
+            return false
+        }
+
+        return true
+    }
+
 }
 
 let bc = new Blockchain()
 bc.mine()
+console.log(bc.blockchain)
+
 

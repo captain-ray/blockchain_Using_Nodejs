@@ -43,12 +43,12 @@ computeHash(index, prevHash, timestamp, data, nonce) {
 
 
 
-## 1.3 mine function
+## 1.3 generate a new block 
 
-to make hash smaller
+to make hash smaller, needs keep computing hash until the first 4 digits of hash are all '0'
 
 ```js
-mine() {
+generateNewBlock() {
         let nonce = 0
         const index = 0
         const data = "Hello ray-chain"
@@ -82,10 +82,10 @@ When increase to 4, the number increase to 96830
 
 ## 1.4 genesis block
 
-Using mine() function to generate a genesis block (difficulty = 4 in this context, we want the first 4 digits of the hash should be '0')
+Using generateNewBlock() function to generate a genesis block (difficulty = 4 in this context, we want the first 4 digits of the hash should be '0')
 
 ```js
- mine() {
+ generateNewBlock() {
         let nonce = 0
         const index = 0
         const data = "Hello ray-chain"
@@ -117,7 +117,7 @@ the detail of genesis block shows below:
 so, we initialize the genesis block
 
 ```js
-// use mine() function to generate a genesis block
+// use generateNewBlock() function to generate a genesis block
 const genesisBlock = {
     index: 0,
     data: 'Hello ray-chain',
@@ -129,4 +129,47 @@ const genesisBlock = {
 ```
 
 
+
+## 1.5 check if block is valid
+
+after generate a new block, to check this newly generated block is valid or not
+
+requirements to meet:
+
+1. index = index of last block + 1 
+
+2. timestamp > timestamp of last block
+
+3. prevHash =  hash of last block
+
+4. comply with difficulty requirement (the first 4 digits should be '0')
+
+```js
+isValidBlock(newBlock) {
+        const lastBlock = this.getLastBlock()
+        /*
+        Check
+          1. index = index of last block + 1 
+          2. timestamp > timestamp of last block
+          3. prevHash =  hash of last block
+          4. comply with difficulty requirement (the first 4 digits should be '0')
+         */
+        
+        if (newBlock.index !== lastBlock.index + 1) {
+            return false
+        } else if (newBlock.timestamp <= lastBlock.timestamp) {
+            return false
+        } else if (newBlock.prevHash !== lastBlock.hash) {
+            return false
+        } else if (newBlock.hash.slice(0, this.difficulty) !== '0'.repeat(this.difficulty)) {
+            return false
+        }
+
+        return true
+    }
+```
+
+![5](demo_images/5.png)
+
+once confirm that the new block is valid, it will be added to the chain
 
