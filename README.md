@@ -23,15 +23,19 @@ mine() {
 
 In this code snippet, we limit the first two digits should be ‘0’, which needs 397 computations
 
-![Screen Shot 2019-04-16 at 9.13.28 pm](demo_images/Screen Shot 2019-04-16 at 9.13.28 pm.png)
+![1](demo_images/1.png)
 
 
 
-To limit the first 3 digits should be ‘0’, the number of computation is 8173![Screen Shot 2019-04-16 at 9.15.09 pm](demo_images/Screen Shot 2019-04-16 at 9.15.09 pm.png)
+To limit the first 3 digits should be ‘0’, the number of computation is 8173
+
+![2](demo_images/2.png)
 
 
 
-When increase to 4, the number increase to 96830![Screen Shot 2019-04-16 at 9.18.30 pm](demo_images/Screen Shot 2019-04-16 at 9.18.30 pm.png)
+When increase to 4, the number increase to 96830
+
+![3](demo_images/3.png)
 
  
 
@@ -65,7 +69,5 @@ Using mine() function to generate a genesis block (difficulty = 4 in this contex
 
 the detail of genesis block shows below:
 
-![Screen Shot 2019-04-16 at 9.47.35 pm](demo_images/Screen Shot 2019-04-16 at 9.47.35 pm.png)
-
-![Welcome_page(login)](demo_images/Welcome_page(login).png)
+![4](demo_images/4.png)
 
