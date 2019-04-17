@@ -315,7 +315,7 @@ function formatLog(data){
 
 ## 1.9 simple transaction 
 
-1. simple transaction of transfering from 'A'  the 'amount' to 'B' —— <from> <to> <amount>
+1. simple transaction of 'A' transfering the 'amount' to 'B' 
 2. every time genesisBlock will give miner 100 ray-coins(JUST FOR FUN) as reward, which also be recorded in the transaction
 
 ```js
@@ -348,4 +348,3 @@ For exmaple, there are two transactions:
 And after a miner write these two transactions into a block, he will be rewarded 100 ray-coins, which should be recorded in the block. So, the details of the block show below:
 
 ![12](demo_images/12.png)
-
