@@ -24,13 +24,31 @@ function formatLog(data){
 
     //tricky one, but very concise! Important!
     const res=data.map(obj=>{
-        return head.map(key=>obj[key])
+        return head.map(key=>JSON.stringify(obj[key],null,1))
     })
 
     // spread operator
     table.push(...res)
     console.log(table.toString())
 }
+
+vorpal
+    .command('detail <index>','show details of a block')
+    .action(function(args,callback){
+        const block=blockchain.blockchain[args.index]
+        console.log(JSON.stringify(block,null,2))
+        callback()
+    })
+
+
+
+vorpal
+    .command('trans <from> <to> <amount>', 'transfer')
+    .action(function(args,callback){
+        let trans=blockchain.transfer(args.from,args.to,args.amount)
+        formatLog(trans)
+        callback()
+    })
 
 
 vorpal

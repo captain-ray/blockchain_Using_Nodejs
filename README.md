@@ -274,7 +274,7 @@ vorpal
 
 
 
-## 1.8 format data into table using 'cli-rable'
+## 1.8 format data into table using 'cli-table'
 
 > This utility allows you to render unicode-aided tables on the command line from your node.js scripts.
 
@@ -310,4 +310,42 @@ function formatLog(data){
 ```
 
 ![10](demo_images/10.png)
+
+
+
+## 1.9 simple transaction 
+
+1. simple transaction of transfering from 'A'  the 'amount' to 'B' —— <from> <to> <amount>
+2. every time genesisBlock will give miner 100 ray-coins(JUST FOR FUN) as reward, which also be recorded in the transaction
+
+```js
+//simple transfer function
+transfer(from, to, amount) {
+        const tranObj = { from, to, amount }
+        this.data.push(tranObj) 
+        return tranObj
+    }
+
+//every time genesisBlock will give miner 100 coins as reward, which also be recorded in the transaction
+mine(address) {
+        //give miner reward of 100 ray-coins
+        this.transfer('0', address, 100)
+
+        const newBlock = this.generateNewBlock()
+        ...
+    }
+```
+
+For exmaple, there are two transactions:
+
+- Satoshi transfered Ray 10000 ray-coins
+- Ray transfered Satoshi 9999 ray-coins
+
+![11](demo_images/11.png)
+
+
+
+And after a miner write these two transactions into a block, he will be rewarded 100 ray-coins, which should be recorded in the block. So, the details of the block show below:
+
+![12](demo_images/12.png)
 

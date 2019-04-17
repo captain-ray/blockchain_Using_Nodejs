@@ -31,12 +31,22 @@ class Blockchain {
         return this.blockchain[this.blockchain.length - 1]
     }
 
+    transfer(from, to, amount) {
+        const tranObj = { from, to, amount }
+        this.data.push(tranObj)
+        return tranObj
+    }
 
-    mine() {
+    
+    mine(address) {
+        //give miner reward of 100 ray-coins
+        this.transfer('0', address, 100)
+
         const newBlock = this.generateNewBlock()
         if (this.isValidBlock(newBlock) && this.isValidChain()) {
             console.log("Success:valid block!")
             this.blockchain.push(newBlock)
+            this.data = []
             return newBlock
         } else {
             console.log("Error:invalid block!")
@@ -67,7 +77,7 @@ class Blockchain {
         }
     }
 
-    
+
 
     //using 'sha256' (Secure Hash Algorithm 256-bit) to generate hash
     computeHash(index, prevHash, timestamp, data, nonce) {
@@ -78,7 +88,7 @@ class Blockchain {
     }
 
     //using 'sha256' (Secure Hash Algorithm 256-bit) to generate hash
-    computeBlockHash({index, prevHash, timestamp, data, nonce}) {
+    computeBlockHash({ index, prevHash, timestamp, data, nonce }) {
         return crypto
             .createHash('sha256')
             .update(index + prevHash + timestamp + data + nonce)
@@ -105,7 +115,7 @@ class Blockchain {
             return false
         } else if (newBlock.hash.slice(0, this.difficulty) !== '0'.repeat(this.difficulty)) {
             return false
-        }else if(newBlock.hash!==this.computeBlockHash(newBlock)){ //everytime you check the block, should recompute the hash and compare it with the original hash
+        } else if (newBlock.hash !== this.computeBlockHash(newBlock)) { //everytime you check the block, should recompute the hash and compare it with the original hash
             return false
         }
 
@@ -116,20 +126,21 @@ class Blockchain {
     isValidChain(chain = this.blockchain) {
         //compare every single block with previous block using isValidBlock() function
         for (let i = chain.length - 1; i >= 1; i--) {
-            if(!this.isValidBlock(chain[i],chain[i-1])){
+            if (!this.isValidBlock(chain[i], chain[i - 1])) {
                 console.log('Invalid chain!')
                 return false
             }
         }
 
         //simply compare the first block with genesis block
-        if(JSON.stringify(chain[0])!==JSON.stringify(genesisBlock)){
+        if (JSON.stringify(chain[0]) !== JSON.stringify(genesisBlock)) {
             return false
         }
-        
+
         return true
     }
 
+    
 }
 
 // let bc = new Blockchain()
@@ -138,6 +149,6 @@ class Blockchain {
 // bc.mine()
 // console.log(bc.blockchain)
 
-module.exports=Blockchain
+module.exports = Blockchain
 
 
