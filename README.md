@@ -272,3 +272,42 @@ vorpal
 
 ![9](demo_images/9.png)
 
+
+
+## 1.8 format data into table using 'cli-rable'
+
+> This utility allows you to render unicode-aided tables on the command line from your node.js scripts.
+
+```js
+/* 
+data structure will be like
+[
+    {index:0,data:'hello world'...},
+    {index:1,data:'hello NodeJs'...},
+]
+*/
+// format data into table
+function formatLog(data){
+    if(!Array.isArray(data)){
+        data=[data]
+    }
+    const firstObject=data[0]
+    head=Object.keys(firstObject)
+    const table=new Table({
+        head:head,
+        colWidths:new Array(head.length).fill(15)
+    })
+
+    //tricky one, but very concise! Important!
+    const res=data.map(obj=>{
+        return head.map(key=>obj[key])
+    })
+
+    // spread operator
+    table.push(...res)
+    console.log(table.toString())
+}
+```
+
+![10](demo_images/10.png)
+
