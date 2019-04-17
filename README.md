@@ -316,7 +316,7 @@ function formatLog(data){
 ## 1.9 simple transaction 
 
 1. simple transaction of 'A' transfering the 'amount' to 'B' 
-2. every time genesisBlock will give miner 100 ray-coins(JUST FOR FUN) as reward, which also be recorded in the transaction
+2. genesisBlock will give miner 100 ray-coins(JUST FOR FUN) as reward for mining, which should also be recorded in the transaction
 
 ```js
 //simple transfer function
@@ -348,3 +348,46 @@ For exmaple, there are two transactions:
 And after a miner write these two transactions into a block, he will be rewarded 100 ray-coins, which should be recorded in the block. So, the details of the block show below:
 
 ![12](demo_images/12.png)
+
+
+
+## 1.10 calculate balance
+
+go through every block-> every transaction to calculate
+
+```js
+//calculate balance: go through every block-> every transaction to calculate
+    balance(address){
+        let balance=0
+        this.blockchain.forEach(block=>{
+            // if it is genesis block, return
+            if(!Array.isArray(block.data)) return
+
+            block.data.forEach(trans=>{
+                if(trans.from===address){
+                    balance-=trans.amount
+                }else if(trans.to===address){
+                    balance+=trans.amount
+                }
+            })
+        })
+        return balance
+    }
+
+
+// also, every time you transfer, need to check if balance is enough
+transfer(from, to, amount) {
+        // if 'from' is genesis block, don't have to check
+        if(from!=='0'){
+            let balance=this.balance(from)
+            if(balance<amount){
+                console.log("Not enough balance! Sorry!")
+                return
+            }
+        }
+...
+}
+```
+
+  Ray get 100 coins for initial minging(balance=100) -> Ray transfer 99 coins to Satoshi (balance=1) -> Ray get another 100 coins for mining again(balance=101)![13](demo_images/13.png)
+

@@ -31,7 +31,35 @@ class Blockchain {
         return this.blockchain[this.blockchain.length - 1]
     }
 
+    //calculate balance: go through every block-> every transaction to calculate
+    balance(address){
+        let balance=0
+        this.blockchain.forEach(block=>{
+            // if it is genesis block, return
+            if(!Array.isArray(block.data)) return
+
+            block.data.forEach(trans=>{
+                if(trans.from===address){
+                    balance-=trans.amount
+                }else if(trans.to===address){
+                    balance+=trans.amount
+                }
+            })
+        })
+        return balance
+    }
+
+
     transfer(from, to, amount) {
+        // if 'from' is genesis block, don't have to check
+        if(from!=='0'){
+            let balance=this.balance(from)
+            if(balance<amount){
+                console.log("Not enough balance! Sorry!")
+                return
+            }
+        }
+
         const tranObj = { from, to, amount }
         this.data.push(tranObj)
         return tranObj

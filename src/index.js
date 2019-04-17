@@ -1,5 +1,5 @@
 const vorpal = require('vorpal')()
-const Table=require('cli-table')
+const Table = require('cli-table')
 const Blockchain = require('./Blockchain')
 const blockchain = new Blockchain()
 
@@ -11,20 +11,20 @@ data structure will be like
 ]
 */
 // format data into table
-function formatLog(data){
-    if(!Array.isArray(data)){
-        data=[data]
+function formatLog(data) {
+    if (!Array.isArray(data)) {
+        data = [data]
     }
-    const firstObject=data[0]
-    head=Object.keys(firstObject)
-    const table=new Table({
-        head:head,
-        colWidths:new Array(head.length).fill(15)
+    const firstObject = data[0]
+    head = Object.keys(firstObject)
+    const table = new Table({
+        head: head,
+        colWidths: new Array(head.length).fill(15)
     })
 
     //tricky one, but very concise! Important!
-    const res=data.map(obj=>{
-        return head.map(key=>JSON.stringify(obj[key],null,1))
+    const res = data.map(obj => {
+        return head.map(key => JSON.stringify(obj[key], null, 1))
     })
 
     // spread operator
@@ -33,20 +33,29 @@ function formatLog(data){
 }
 
 vorpal
-    .command('detail <index>','show details of a block')
-    .action(function(args,callback){
-        const block=blockchain.blockchain[args.index]
-        console.log(JSON.stringify(block,null,2))
+    .command('balance <address>', 'check the balance')
+    .action(function (args, callback) {
+        const balance = blockchain.balance(args.address)
+        formatLog({ balance, address: args.address })
         callback()
     })
 
 
+vorpal
+    .command('detail <index>', 'show details of a block')
+    .action(function (args, callback) {
+        const block = blockchain.blockchain[args.index]
+        console.log(JSON.stringify(block, null, 2))
+        callback()
+    })
 
 vorpal
     .command('trans <from> <to> <amount>', 'transfer')
-    .action(function(args,callback){
-        let trans=blockchain.transfer(args.from,args.to,args.amount)
-        formatLog(trans)
+    .action(function (args, callback) {
+        let trans = blockchain.transfer(args.from, args.to, args.amount)
+        if (trans) {
+            formatLog(trans)
+        }
         callback()
     })
 
@@ -59,10 +68,10 @@ vorpal
     })
 
 vorpal
-    .command('mine', 'mining')
+    .command('mine <address>', 'mining')
     .action(function (args, callback) {
-        const newBlock=blockchain.mine()
-        if(newBlock){
+        const newBlock = blockchain.mine(args.address)
+        if (newBlock) {
             formatLog(newBlock)
         }
         callback()
